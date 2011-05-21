@@ -1,0 +1,29 @@
+name: SpyerAdmin
+
+main: nickguletskii200.SpyerAdmin.SpyerAdmin
+
+version: 1.1
+
+description: spying utility for administrators and moderators
+
+authors:
+  - nickguletskii200
+
+commands:
+  spy:
+    description: Hides the player until used again
+    usage: /spy
+  quit:
+    description: Hides the player until used again, simulates quitting
+    usage: /quit
+  list:
+    description: List all online players.
+    usage: /<command>
+    aliases: [playerlist,who,online]
+  r:
+    description: Quickly reply to the last player to message you.
+    usage: /<command> [message]
+  msg:
+    description: Sends a private message to the specified player.
+    usage: /<command> <to> <message>
+    aliases: [m,t,tell]
