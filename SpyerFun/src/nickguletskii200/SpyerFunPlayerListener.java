@@ -92,6 +92,7 @@ public class SpyerFunPlayerListener extends PlayerListener {
 			}
 		}
 	}
+
 	public boolean outsideSight(Location loc1, Location loc2) {
 		World w1 = loc1.getWorld();
 		World w2 = loc2.getWorld();
@@ -102,11 +103,11 @@ public class SpyerFunPlayerListener extends PlayerListener {
 		}
 		Chunk chG = w2.getChunkAt(loc2.getBlock());
 		Chunk ch = w1.getChunkAt(loc1.getBlock());
-		int maxX = chG.getX() + 5; // Just making sure nobody will still be
+		int maxX = chG.getX() + 16; // Just making sure nobody will still be
 		// visible
-		int minX = chG.getX() - 5; // TODO: tweak the numbers
-		int maxZ = chG.getZ() + 5;
-		int minZ = chG.getZ() - 5;
+		int minX = chG.getX() - 16; // TODO: tweak the numbers
+		int maxZ = chG.getZ() + 16;
+		int minZ = chG.getZ() - 16;
 		if ((ch.getX() <= maxX || ch.getX() >= minX)
 				|| (ch.getZ() <= maxZ || ch.getZ() >= minZ)) {
 			return false;
@@ -114,6 +115,7 @@ public class SpyerFunPlayerListener extends PlayerListener {
 			return true;
 		}
 	}
+
 	public void invisible(Player p1, Player p2) {
 		if (outsideSight(p1.getLocation(), p2.getLocation())) {
 			return;
