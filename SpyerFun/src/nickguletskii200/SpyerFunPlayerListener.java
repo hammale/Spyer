@@ -8,6 +8,9 @@ import net.minecraft.server.Packet20NamedEntitySpawn;
 import net.minecraft.server.Packet29DestroyEntity;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Chunk;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
@@ -89,8 +92,32 @@ public class SpyerFunPlayerListener extends PlayerListener {
 			}
 		}
 	}
-
+	public boolean outsideSight(Location loc1, Location loc2) {
+		World w1 = loc1.getWorld();
+		World w2 = loc2.getWorld();
+		if (!w1.getName().equals(w2.getName())) {
+			// We don't need to hide people from different worlds! Woohoo,
+			// multiworld friendly!
+			return false;
+		}
+		Chunk chG = w2.getChunkAt(loc2.getBlock());
+		Chunk ch = w1.getChunkAt(loc1.getBlock());
+		int maxX = chG.getX() + 5; // Just making sure nobody will still be
+		// visible
+		int minX = chG.getX() - 5; // TODO: tweak the numbers
+		int maxZ = chG.getZ() + 5;
+		int minZ = chG.getZ() - 5;
+		if ((ch.getX() <= maxX || ch.getX() >= minX)
+				|| (ch.getZ() <= maxZ || ch.getZ() >= minZ)) {
+			return false;
+		} else {
+			return true;
+		}
+	}
 	public void invisible(Player p1, Player p2) {
+		if (outsideSight(p1.getLocation(), p2.getLocation())) {
+			return;
+		}
 		CraftPlayer hide = (CraftPlayer) p1;
 		CraftPlayer hideFrom = (CraftPlayer) p2;
 		if (!playerHideTree.containsKey(p1.getName())) {
