@@ -38,7 +38,7 @@ public class SpyerAdminPlayerListener extends PlayerListener {
 	// arraylist.
 	public HashMap<String, ArrayList<String>> playerHideTree = new HashMap<String, ArrayList<String>>();
 	// TODO: persistence of people to hide when they join
-	private HashMap<String, Boolean> hideOnJoin = new HashMap<String, Boolean>();
+	HashMap<String, Boolean> hideOnJoin = new HashMap<String, Boolean>();
 	private Indicator ind = new Indicator();
 
 	public SpyerAdminPlayerListener(SpyerAdmin _plug) {

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -13,6 +14,7 @@ import org.bukkit.event.Event.Priority;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+
 /**
  * The main class.
  * 
@@ -26,6 +28,7 @@ public class SpyerAdmin extends JavaPlugin {
 	private ArrayList<String> spying = new ArrayList<String>();
 	ArrayList<String> antigrief = new ArrayList<String>();
 	private MobListener ml;
+	private boolean firstrun = true;
 
 	public SpyerAdmin() {
 		super();
@@ -84,10 +87,38 @@ public class SpyerAdmin extends JavaPlugin {
 				Priority.Monitor, this);
 
 		pm.registerEvent(Event.Type.ENTITY_TARGET, ml, Priority.Monitor, this);
+		if (!firstrun) {
+			for (String str : getPlayerListener().hideOnJoin.keySet()) {
+				getPlayerListener().vanish(getServer().getPlayer(str));
+				getServer().getPlayer(str).sendMessage(
+						ChatColor.GREEN
+								+ "You were made invisible after a reload.");
+				getPlayerListener().hideOnJoin.remove(str);
+			}
+		}
 	}
 
 	public void onDisable() {
+		firstrun = false;
 		Debugging.stop();
+		for (String str : getPlayerListener().commonPlayers) {
+			Player plr = getServer().getPlayer(str);
+			plr
+					.sendMessage("Reload in progress! You have 10 seconds to hide - invvisiblity will be lost.");
+		}
+		try {
+			Thread.sleep(10000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		for (String str : getPlayerListener().commonPlayers) {
+			Player plr = getServer().getPlayer(str);
+			getPlayerListener().reappear(plr);
+			getPlayerListener().hideOnJoin.put(plr.getName(), antigrief
+					.contains(plr.getName()));
+			getPlayerListener().quit(plr);
+		}
 	}
 
 	public SpyerAdminPlayerListener getPlayerListener() {
