@@ -1,0 +1,24 @@
+name: SpyerAdminCommands
+
+main: nickguletskii200.SpyerAdmin.SpyerAdminCommands
+
+version: 1.4 stable
+
+description: spying utility for administrators and moderators (CommandBook commands module)
+
+authors:
+  - nickguletskii200
+
+commands:
+  list:
+    aliases: [who, playerlist, online, players]
+    description: Get the list of players
+    usage: /<command> [filter]
+  r:
+    aliases: reply
+    description: Reply to the last user
+    usage: /<command> <message...>
+  msg:
+    aliases: [message, whisper, pm, tell]
+    description: Send a private message to a user
+    usage: /<command> <target> <message...>

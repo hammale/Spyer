@@ -1,0 +1,10 @@
+name: SpyerFun
+
+main: nickguletskii200.SpyerFun
+
+description: spying utility for normal players
+
+authors:
+  - nickguletskii200
+
+version: 1.4 stable

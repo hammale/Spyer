@@ -1,0 +1,19 @@
+name: SpyerAdmin
+
+main: nickguletskii200.SpyerAdmin.SpyerAdmin
+
+version: 1.4 stable
+
+description: spying utility for administrators and moderators (main module)
+depend:
+  - SpyerAdminCommands
+authors:
+  - nickguletskii200
+
+commands:
+  spy:
+    description: Hides the player until used again
+    usage: /spy
+  quit:
+    description: Hides the player until used again, simulates quitting
+    usage: /quit

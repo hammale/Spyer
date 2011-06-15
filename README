@@ -1,0 +1,49 @@
+{\rtf1\ansi\deff3\adeflang1025
+{\fonttbl{\f0\froman\fprq2\fcharset0 Times New Roman;}{\f1\froman\fprq2\fcharset2 Symbol;}{\f2\fswiss\fprq2\fcharset0 Arial;}{\f3\froman\fprq2\fcharset128 Liberation Serif{\*\falt Times New Roman};}{\f4\fswiss\fprq2\fcharset128 Liberation Sans{\*\falt Arial};}{\f5\fnil\fprq0\fcharset128 Ubuntu{\*\falt UbuntuBeta};}{\f6\fnil\fprq2\fcharset128 Droid Sans Fallback;}{\f7\fnil\fprq2\fcharset128 Lohit Hindi;}{\f8\fnil\fprq0\fcharset128 Lohit Hindi;}}
+{\colortbl;\red0\green0\blue0;\red0\green0\blue128;\red72\green72\blue72;\red65\green131\blue196;\red128\green128\blue128;}
+{\stylesheet{\s0\snext0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\cf0\kerning1\hich\af6\langfe2052\dbch\af7\afs24\lang1081\loch\f3\fs24\lang2057 Normal;}
+{\s3\sbasedon16\snext17\ilvl2\outlinelevel2\sb240\sa120\keepn\b\hich\af6\dbch\af7\afs28\ab\loch\f4\fs48 Heading 3;}
+{\*\cs15\snext15\cf2\ul\ulc0\langfe255\lang255\lang255 Internet Link;}
+{\s16\sbasedon0\snext17\sb240\sa120\keepn\hich\af6\dbch\af7\afs28\loch\f4\fs28 Heading;}
+{\s17\sbasedon0\snext17\sb0\sa120 Text body;}
+{\s18\sbasedon17\snext18\sb0\sa120\dbch\af8 List;}
+{\s19\sbasedon0\snext19\sb120\sa120\noline\i\dbch\af8\afs24\ai\fs24 Caption;}
+{\s20\sbasedon0\snext20\noline\dbch\af8 Index;}
+}{\*\listtable{\list\listtemplateid1
+{\listlevel\levelnfc0\leveljc0\levelstartat1\levelfollow0{\leveltext \'00;}{\levelnumbers;}\fi-432\li432}
+{\listlevel\levelnfc0\leveljc0\levelstartat1\levelfollow0{\leveltext \'00;}{\levelnumbers;}\fi-576\li576}
+{\listlevel\levelnfc0\leveljc0\levelstartat1\levelfollow0{\leveltext \'00;}{\levelnumbers;}\fi-720\li720}
+{\listlevel\levelnfc0\leveljc0\levelstartat1\levelfollow0{\leveltext \'00;}{\levelnumbers;}\fi-864\li864}
+{\listlevel\levelnfc0\leveljc0\levelstartat1\levelfollow0{\leveltext \'00;}{\levelnumbers;}\fi-1008\li1008}
+{\listlevel\levelnfc0\leveljc0\levelstartat1\levelfollow0{\leveltext \'00;}{\levelnumbers;}\fi-1152\li1152}
+{\listlevel\levelnfc0\leveljc0\levelstartat1\levelfollow0{\leveltext \'00;}{\levelnumbers;}\fi-1296\li1296}
+{\listlevel\levelnfc0\leveljc0\levelstartat1\levelfollow0{\leveltext \'00;}{\levelnumbers;}\fi-1440\li1440}
+{\listlevel\levelnfc0\leveljc0\levelstartat1\levelfollow0{\leveltext \'00;}{\levelnumbers;}\fi-1584\li1584}\listid1}
+}{\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}}{\info{\author Nick Guletskii}{\creatim\yr2011\mo6\dy15\hr16\min57}{\revtim\yr0\mo0\dy0\hr0\min0}{\printim\yr0\mo0\dy0\hr0\min0}{\comment LibreOffice}{\vern3300}}\deftab709\deftab0\deftab0
+
+{\*\pgdsctbl
+{\pgdsc0\pgdscuse195\pgwsxn11906\pghsxn16838\marglsxn1134\margrsxn1134\pgdscnxt0 Default;}}
+\formshade\paperh16838\paperw11906\margl1134\margr1134\margt1134\margb1134\sectd\sbknone\sectunlocked1\pgndec\pgwsxn11906\pghsxn16838\marglsxn1134\margrsxn1134\ftnbj\ftnstart1\ftnrstcont\ftnnar\aenddoc\aftnrstcont\aftnstart1\aftnnrlc
+\pgndec\pard\plain \s3\ilvl2\outlinelevel2\sb240\sa120\keepn\b\hich\af6\dbch\af7\afs28\ab\loch\f4\fs48{\listtext\pard\plain  \tab}\ls1 \li720\ri0\lin720\rin0\fi-720\sb240\sa120{\ulnone\ulc0\rtlch \ltrch\loch
+Building Spyer from source}
+\par \pard\plain \s17\sb0\sa120{\rtlch \ltrch\loch
+The easiest but the most inconvenient way of doing it is just compiling this in eclipse and zipping the contents of the bin folder and config folder together in all projects, but a better way is to write ant buildfiles.}
+\par \pard\plain \s17\sb0\sa120{\rtlch \ltrch\loch
+Now, version 1.4 introduced modularity of the SpyerAdmin package. That means that if you want SpyerAdmin to work, you will need the two modules. The buildfile should make a jar for each project and copy them into a single plugins directory, where they can be tested. Same buildfile can be reused for different command module versions thanks to eclipse's launch configuration manager (overwriting variables).}
+\par \pard\plain \s3\ilvl2\outlinelevel2\sb240\sa120\keepn\b\hich\af6\dbch\af7\afs28\ab\loch\f4\fs48{\listtext\pard\plain  \tab}\ls1 \li720\ri0\lin720\rin0\fi-720{\rtlch \ltrch\loch
+Finding your way around the projects}
+\par \pard\plain \s17\sb0\sa120{\rtlch \ltrch\loch
+SpyerAdmin \uc3 \u8211\'e2\'80\'93 main SpyerAdmin module.\uc1 }
+\par \pard\plain \s17\sb0\sa120{\rtlch \ltrch\loch
+SpyerAdminCommands \uc3 \u8211\'e2\'80\'93 SpyerAdmin commands. By default forces who, message and reply, but can be extended to work with more. Needs rhino.jar in JRE lib directory.\uc1 }
+\par \pard\plain \s17\sb0\sa120{\rtlch \ltrch\loch
+SpyerAdminCommandBookCommands \uc3 \u8211\'e2\'80\'93 SpyerAdmin commands for CommandBook.\uc1 }
+\par \pard\plain \s17\sb0\sa120{\rtlch \ltrch\loch
+SpyerFun \uc3 \u8211\'e2\'80\'93 SpyerFun.\uc1 }
+\par \pard\plain \s17\sb0\sa120{\rtlch \ltrch\loch
+Each project contains two directories: src (the source files) and config(manifests and other).}
+\par \pard\plain \s3\ilvl2\outlinelevel2\sb240\sa120\keepn\b\hich\af6\dbch\af7\afs28\ab\loch\f4\fs48{\listtext\pard\plain  \tab}\ls1 \li720\ri0\lin720\rin0\fi-720{\rtlch \ltrch\loch
+How can you help}
+\par \pard\plain \s17\sb0\sa120\sb0\sa120{\rtlch \ltrch\loch
+I would appreciate some cleaning up. Why can't I do it myself? Because a clean mind can do it better \uc3 \u8211\'e2\'80\'93 there are no \u8220\'e2\'80\'9ccan't be done\u8221\'e2\'80\'9ds that I have because of running into numerous problems during development which was done in quite a rush. Thanks in advance!\uc1 }
+\par }
