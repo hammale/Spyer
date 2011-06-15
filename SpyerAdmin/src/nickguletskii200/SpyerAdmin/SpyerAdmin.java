@@ -1,13 +1,15 @@
 package nickguletskii200.SpyerAdmin;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
+import java.util.HashSet; 
 import java.util.logging.Logger;
 
+import nickguletskii200.SpyerAdminShared.ICustomHandling;
+import nickguletskii200.SpyerAdminShared.IMainGetters;
+import nickguletskii200.SpyerAdminShared.ISpyerAdmin; 
+ 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
+import org.bukkit.command.CommandSender; 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
@@ -20,13 +22,13 @@ import org.bukkit.plugin.java.JavaPlugin;
  * 
  * @author nickguletskii200
  */
-public class SpyerAdmin extends JavaPlugin {
+public class SpyerAdmin extends JavaPlugin implements ISpyerAdmin {
 	Logger log;
 	private SpyerSettings ss;
 	private final SpyerAdminPlayerListener playerListener;
-	private CustomHandling ch;
-	private ArrayList<String> spying = new ArrayList<String>();
-	ArrayList<String> antigrief = new ArrayList<String>();
+	private HashSet<String> spying = new HashSet<String>();
+	public ICustomHandling ch;
+	//HashSet<String> antigrief = new HashSet<String>();
 	private MobListener ml;
 	private boolean firstrun = true;
 
@@ -35,38 +37,21 @@ public class SpyerAdmin extends JavaPlugin {
 		playerListener = new SpyerAdminPlayerListener(this);
 		ml = new MobListener(this);
 		ss = (new SpyerSettings(this));
-		SpyerLog.sa = this;
+		// SpyerLog.sa = this;
 		Debugging.start();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see nickguletskii200.SpyerAdmin.ISpyerAdmin#onEnable()
+	 */
 	public void onEnable() {
 		log = this.getServer().getLogger();
 		Debugging.log("Loading Spyer settings");
 		getSettings().load();
-		String repo;
-		Debugging.log("Updating script.");
-		try {
-			Debugging.log("Fetching repo loc");
-			repo = Updater.getRepo();
-			if (!repo.equals("")) {
-				Debugging.log("Repo found. Downloading.");
-				Updater.download(repo + "script.js", "plugins" + File.separator
-						+ "Spyer" + File.separator + "script.js");
-				System.out
-						.println("SpyerAdmin has completed updating the script successfully.");
-				Debugging.log("Downloaded script.js");
-			} else {
-				Debugging.log("Repo not found. Update disabled.");
-				SpyerLog.info("SpyerAdmin updates are disabled.");
-			}
-		} catch (IOException e) {
-			SpyerLog
-					.error("SpyerAdmin script update failed: " + e.getMessage());
-			Debugging.logException(e, "Update" + System.nanoTime());
-		}
-		Debugging.log("Constructing script handler.");
-		ch = new CustomHandling(this);
-		Debugging.log("Constructed.");
+		ch = ((IMainGetters) getServer().getPluginManager().getPlugin(
+				"SpyerAdminCommands")).getCustomHandling();
 		PluginDescriptionFile pdfFile = this.getDescription();
 		SpyerLog.info(pdfFile.getName() + " module version "
 				+ pdfFile.getVersion() + ", a " + pdfFile.getDescription()
@@ -98,19 +83,32 @@ public class SpyerAdmin extends JavaPlugin {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see nickguletskii200.SpyerAdmin.ISpyerAdmin#onDisable()
+	 */
 	public void onDisable() {
 		firstrun = false;
 		Debugging.stop();
 		for (String str : getPlayerListener().commonPlayers) {
 			Player plr = getServer().getPlayer(str);
-			plr
-					.sendMessage("Reload in progress! You have 10 seconds to hide - invvisiblity will be lost.");
+			// plr.sendMessage("Reload in progress! Invisiblity will be lost.");
+			if (getSettings().wait) {
+				plr
+						.sendMessage("Reload in progress! In 10 seconds invisiblity will be lost.");
+			} else {
+				plr
+						.sendMessage("Reload in progress! Invisiblity will be lost.");
+			}
 		}
-		try {
-			Thread.sleep(10000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if (getSettings().wait) {
+			try {
+				Thread.sleep(10000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		for (String str : getPlayerListener().commonPlayers) {
 			Player plr = getServer().getPlayer(str);
@@ -121,37 +119,31 @@ public class SpyerAdmin extends JavaPlugin {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see nickguletskii200.SpyerAdmin.ISpyerAdmin#getPlayerListener()
+	 */
 	public SpyerAdminPlayerListener getPlayerListener() {
 		return playerListener;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * nickguletskii200.SpyerAdmin.ISpyerAdmin#onCommand(org.bukkit.command.
+	 * CommandSender, org.bukkit.command.Command, java.lang.String,
+	 * java.lang.String[])
+	 */
+	@SuppressWarnings("static-access")
 	public boolean onCommand(CommandSender sender, Command cmd,
 			String commandLabel, String[] args) {
 		try {
 			String command = cmd.getName();
 			Debugging.log("Command issued: " + cmd.getName());
 			log = this.getServer().getLogger();
-			if (command.equals("list")) {
-				getSettings().load();
-				Debugging.log("Executing who listener");
-				ch.who(sender);
-				Debugging.log("Executed who listener");
-				return true;
-			}
-			if (command.equals("msg")) {
-				getSettings().load();
-				Debugging.log("Executing msg listener");
-				ch.playerMsg(sender, args, commandLabel);
-				Debugging.log("Executed msg listener");
-				return true;
-			}
-			if (command.equals("r")) {
-				getSettings().load();
-				Debugging.log("Executing r listener");
-				ch.reply(sender, args, commandLabel);
-				Debugging.log("Executed r listener");
-				return true;
-			}
+
 			if ((sender instanceof Player)) {
 				Player localObject = (Player) sender;
 				this.getSettings().load();
@@ -244,6 +236,11 @@ public class SpyerAdmin extends JavaPlugin {
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see nickguletskii200.SpyerAdmin.ISpyerAdmin#getSettings()
+	 */
 	public SpyerSettings getSettings() {
 		return ss;
 	}

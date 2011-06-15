@@ -17,6 +17,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityListener;
 import org.bukkit.event.entity.EntityTargetEvent;
+
 /**
  * Listen for entity events.
  * 
@@ -45,6 +46,16 @@ public class MobListener extends EntityListener {
 	}
 
 	public void onEntityDamage(EntityDamageEvent event) {
+		if (sa.getSettings().noDamage
+				&& event instanceof EntityDamageByEntityEvent) {
+			Entity damager = ((EntityDamageByEntityEvent) event).getDamager();
+			if (damager instanceof Player) {
+				if (sa.getPlayerListener().commonPlayers
+						.contains(((Player) damager).getName())) {
+					event.setCancelled(true);
+				}
+			}
+		}
 		if (!sa.getSettings().onDamage) {
 			return;
 		}
@@ -52,7 +63,8 @@ public class MobListener extends EntityListener {
 			Entity ent = ((EntityDamageByEntityEvent) event).getDamager();
 			if (ent instanceof Player) {
 				Player plr = (Player) ent;
-				if (sa.getPlayerListener().commonPlayers.contains(plr.getName())) {
+				if (sa.getPlayerListener().commonPlayers
+						.contains(plr.getName())) {
 					sa.getPlayerListener().reappear(plr);
 				}
 			}

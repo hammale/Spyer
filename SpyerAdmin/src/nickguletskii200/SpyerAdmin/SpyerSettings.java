@@ -9,6 +9,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 
+import nickguletskii200.SpyerAdminShared.ISpyerAdmin;
+import nickguletskii200.SpyerAdminShared.ISpyerSettings;
+
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.yaml.snakeyaml.Yaml;
@@ -21,20 +24,28 @@ import com.nijikokun.bukkit.Permissions.Permissions;
  * 
  * @author nickguletskii200
  */
-public class SpyerSettings extends HashMap<String, Object> {
+public class SpyerSettings extends HashMap<String, Object> implements ISpyerSettings {
 
 	private static final long serialVersionUID = 7771694943392484453L;
 	private PermissionHandler Permissions;
 	private Boolean UsePermissions = null;
-	private SpyerAdmin plugin;
-	public boolean pickup = true;
+	private ISpyerAdmin plugin;
+	public boolean pickup = false;
+	public boolean invincible = false;
+	public boolean noHit = false;
+	public boolean wait = true;
+	private long step = 8000;
+	private HashMap<String, booleanAndInt> seeAllCache = new HashMap<String, booleanAndInt>();
 
-	public SpyerSettings(SpyerAdmin plugin) {
+	public SpyerSettings(ISpyerAdmin plugin) {
 		this.put("refreshRate", 1000);
 		this.put("syncWithScheduler", false);
 		this.plugin = plugin;
 	}
 
+	/* (non-Javadoc)
+	 * @see nickguletskii200.SpyerAdmin.ISpyerSettings#getRefreshRate()
+	 */
 	public int getRefreshRate() {
 		if (!this.containsKey("refreshRate")) {
 			return 1000;
@@ -45,11 +56,17 @@ public class SpyerSettings extends HashMap<String, Object> {
 		return 1000;
 	}
 
+	/* (non-Javadoc)
+	 * @see nickguletskii200.SpyerAdmin.ISpyerSettings#setRefreshRate(int)
+	 */
 	public void setRefreshRate(int i) {
 		this.remove("refreshRate");
 		this.put("refreshRate", i);
 	}
 
+	/* (non-Javadoc)
+	 * @see nickguletskii200.SpyerAdmin.ISpyerSettings#getSync()
+	 */
 	public boolean getSync() {
 		if (!this.containsKey("syncWithScheduler")) {
 			return false;
@@ -60,11 +77,17 @@ public class SpyerSettings extends HashMap<String, Object> {
 		return false;
 	}
 
+	/* (non-Javadoc)
+	 * @see nickguletskii200.SpyerAdmin.ISpyerSettings#setSync(boolean)
+	 */
 	public void setSync(boolean b) {
 		this.remove("syncWithScheduler");
 		this.put("syncWithScheduler", b);
 	}
 
+	/* (non-Javadoc)
+	 * @see nickguletskii200.SpyerAdmin.ISpyerSettings#isSpy(java.lang.String)
+	 */
 	public boolean isSpy(String name) {
 		try {
 			return canUse(plugin.getServer().getPlayer(name), "spyer.spy");
@@ -73,6 +96,9 @@ public class SpyerSettings extends HashMap<String, Object> {
 		return false;
 	}
 
+	/* (non-Javadoc)
+	 * @see nickguletskii200.SpyerAdmin.ISpyerSettings#isVisibleByMobs(java.lang.String)
+	 */
 	public boolean isVisibleByMobs(String name) {
 		try {
 			return !canUse(plugin.getServer().getPlayer(name),
@@ -82,6 +108,9 @@ public class SpyerSettings extends HashMap<String, Object> {
 		return true;
 	}
 
+	/* (non-Javadoc)
+	 * @see nickguletskii200.SpyerAdmin.ISpyerSettings#canUseFun(java.lang.String)
+	 */
 	public boolean canUseFun(String name) {
 		try {
 			return canUse(plugin.getServer().getPlayer(name), "spyer.fun");
@@ -90,14 +119,42 @@ public class SpyerSettings extends HashMap<String, Object> {
 		return false;
 	}
 
+	/* (non-Javadoc)
+	 * @see nickguletskii200.SpyerAdmin.ISpyerSettings#isSeeAll(java.lang.String)
+	 */
 	public boolean isSeeAll(String name) {
-		try {
-			return canUse(plugin.getServer().getPlayer(name), "spyer.seeAll");
-		} catch (Exception e) {
+		String str = "call "+name+"; ";
+		// try {
+		boolean ret = false;
+		if (seeAllCache.containsKey(name)) {
+			booleanAndInt b = seeAllCache.get(name);
+			if (System.currentTimeMillis() - b.time <= step) {
+				str+=("Permission from cache.; ");
+				ret = b.result;
+			} else {
+				str+=("Permission from perm.; ");
+				ret = canUse(plugin.getServer().getPlayer(name), "spyer.seeAll");
+				seeAllCache.get(name).time = System.currentTimeMillis();
+				seeAllCache.get(name).result = ret;
+			}
+		} else {
+			str+=("Permission from perm.; ");
+			ret = canUse(plugin.getServer().getPlayer(name), "spyer.seeAll");
+			booleanAndInt tmp = new booleanAndInt();
+			tmp.time = System.currentTimeMillis();
+			tmp.result = ret;
+			seeAllCache.put(name, tmp);
 		}
-		return false;
+		str+=("ret: " + ret);
+		return ret;
+		// /} catch (Exception e) {
+		// }
+		// return false;
 	}
 
+	/* (non-Javadoc)
+	 * @see nickguletskii200.SpyerAdmin.ISpyerSettings#dump()
+	 */
 	public void dump() {
 		Yaml yaml = new Yaml();
 		String out = yaml.dump(this);
@@ -112,6 +169,9 @@ public class SpyerSettings extends HashMap<String, Object> {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see nickguletskii200.SpyerAdmin.ISpyerSettings#load()
+	 */
 	@SuppressWarnings("unchecked")
 	public void load() {
 		File file = new File("plugins" + File.separator + "Spyer"
@@ -153,6 +213,16 @@ public class SpyerSettings extends HashMap<String, Object> {
 			if (sysSS.containsKey("pickUp")) {
 				pickup = (Boolean) sysSS.get("pickUp");
 			}
+			if (sysSS.containsKey("invincible")) {
+				invincible = (Boolean) sysSS.get("invincible");
+			}
+			if (sysSS.containsKey("noHit")) {
+				noHit = (Boolean) sysSS.get("noHit");
+			}
+			if (sysSS.containsKey("wait")) {
+				wait = (Boolean) sysSS.get("wait");
+			}
+
 		} catch (Exception e) {
 			System.out
 					.println("Error: could not fetch settings from YAML document. Make sure it is correct.");
@@ -169,19 +239,24 @@ public class SpyerSettings extends HashMap<String, Object> {
 			if (test != null) {
 				UsePermissions = true;
 				this.Permissions = ((Permissions) test).getHandler();
-				SpyerLog.info("Found permissions. Using them for SpyerAdmin.");
 			} else {
-				System.out
-						.println("Permission system not detected, defaulting to OP");
 				UsePermissions = false;
 			}
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see nickguletskii200.SpyerAdmin.ISpyerSettings#canUse(org.bukkit.entity.Player, java.lang.String)
+	 */
 	public boolean canUse(Player player, String name) {
 		if (UsePermissions) {
 			return this.Permissions.has(player, name);
 		}
 		return player.isOp();
 	}
+}
+
+class booleanAndInt {
+	long time;
+	boolean result;
 }

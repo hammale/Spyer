@@ -238,6 +238,7 @@ public class SpyerAdminPlayerListener extends PlayerListener {
 		}
 	}
 
+	@SuppressWarnings("static-access")
 	public void onPlayerJoin(PlayerJoinEvent event) {
 
 		if (hideOnJoin.containsKey(event.getPlayer().getName())) {
@@ -265,6 +266,7 @@ public class SpyerAdminPlayerListener extends PlayerListener {
 
 	}
 
+	@SuppressWarnings("static-access")
 	public void quit(Player plr) {
 		if (!commonPlayers.contains(plr.getName())) {
 			return;
@@ -286,6 +288,7 @@ public class SpyerAdminPlayerListener extends PlayerListener {
 		}
 	}
 
+	@SuppressWarnings("static-access")
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		if (commonPlayers.contains(event.getPlayer().getName())) {
 			hideOnJoin.put(event.getPlayer().getName(), plugin.antigrief
@@ -310,6 +313,7 @@ public class SpyerAdminPlayerListener extends PlayerListener {
 		quit(event.getPlayer());
 	}
 
+	@SuppressWarnings("static-access")
 	public void onPlayerChat(PlayerChatEvent event) {
 		if (plugin.antigrief.contains(event.getPlayer().getName())) {
 			event.setCancelled(true);

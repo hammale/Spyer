@@ -30,7 +30,9 @@ public class SpyerSettings extends HashMap<String, Object> {
 	public int coolDown = 0;
 	public boolean onDamage = false;
 	public boolean onBlock = false;
-
+	public boolean noDamage = false;
+	public boolean shadows = false;
+	public byte lightlevel = 7;
 	public SpyerSettings(SpyerFun plugin) {
 		this.put("refreshRate", 1000);
 		this.put("syncWithScheduler", false);
@@ -167,6 +169,9 @@ public class SpyerSettings extends HashMap<String, Object> {
 			if (sysSS.containsKey("onBlock")) {
 				onBlock = (Boolean) sysSS.get("onBlock");
 			}
+			if (sysSS.containsKey("noDamage")) {
+				noDamage = (Boolean) sysSS.get("noDamage");
+			}
 		} catch (Exception e) {
 			System.out
 					.println("Error: could not fetch settings from YAML document. Make sure it is correct.");
@@ -181,10 +186,7 @@ public class SpyerSettings extends HashMap<String, Object> {
 			if (test != null) {
 				UsePermissions = true;
 				this.Permissions = ((Permissions) test).getHandler();
-				SpyerLog.info("Found permissions. Using them for SpyerAdmin.");
 			} else {
-				System.out
-						.println("Permission system not detected, defaulting to OP");
 				UsePermissions = false;
 			}
 		}

@@ -57,6 +57,12 @@ public class SpyerFunPlayerListener extends PlayerListener {
 		for (Player p : playerList) {
 			invisible(player, p);
 		}
+//		if (commonPlayers.contains(event.getPlayer().getName())) {
+//			if (!(event.getTo().getBlock().getLightLevel() > plugin
+//					.getSettings().lightlevel)) {
+//				reappear(event.getPlayer());
+//			}
+//		}
 	}
 
 	public void onPlayerInteract(PlayerInteractEvent event) {
@@ -78,6 +84,12 @@ public class SpyerFunPlayerListener extends PlayerListener {
 				return;
 			}
 		}
+//		if (plugin.getSettings().shadows) {
+//			if (!(event.getPlayer().getLocation().getBlock().getLightLevel() <= plugin
+//					.getSettings().lightlevel)) {
+//				return;
+//			}
+//		}
 		plugin.getSettings().load();
 		if (isCorrect(event.getItem().getTypeId())) {
 			if (commonPlayers.contains(event.getPlayer().getName())) {
@@ -92,6 +104,15 @@ public class SpyerFunPlayerListener extends PlayerListener {
 			}
 		}
 	}
+
+//	public void onPlayerMove(PlayerMoveEvent event) {
+//		if (commonPlayers.contains(event.getPlayer().getName())) {
+//			if (!(event.getTo().getBlock().getLightLevel() > plugin
+//					.getSettings().lightlevel)) {
+//				reappear(event.getPlayer());
+//			}
+//		}
+//	}
 
 	public boolean outsideSight(Location loc1, Location loc2) {
 		World w1 = loc1.getWorld();

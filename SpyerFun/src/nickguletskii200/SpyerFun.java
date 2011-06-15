@@ -2,6 +2,7 @@ package nickguletskii200;
 
 import java.util.logging.Logger;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -52,12 +53,15 @@ public class SpyerFun extends JavaPlugin {
 		pm.registerEvent(Event.Type.PLAYER_TELEPORT, playerListener,
 				Priority.Monitor, this);
 		pm.registerEvent(Event.Type.ENTITY_TARGET, ml, Priority.Monitor, this);
-
 		pm.registerEvent(Event.Type.ENTITY_DAMAGE, ml, Priority.Monitor, this);
-
 	}
 
 	public void onDisable() {
+		for (String str : getPlayerListener().commonPlayers) {
+			Player plr = getServer().getPlayer(str);
+			getPlayerListener().reappear(plr);
+			getPlayerListener().quit(plr);
+		}
 	}
 
 	public SpyerFunPlayerListener getPlayerListener() {
