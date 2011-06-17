@@ -1,9 +1,11 @@
 package nickguletskii200.SpyerAdmin;
 
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -32,7 +34,6 @@ public class Debugging {
 			return null;
 		}
 	};
-
 	public static void start() {
 		if (!log.exists()) {
 			try {
@@ -60,13 +61,19 @@ public class Debugging {
 	}
 
 	public static void logException(Exception e, String id) {
-		StackTraceElement[] st = e.getStackTrace();
+		//StackTraceElement[] st = e.getStackTrace();
 		String buf = "";
-		buf += e.getMessage();
-		for (StackTraceElement se : st) {
-			buf = buf + "\n" + se.toString();
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		PrintStream pos = new PrintStream(bos);
+		e.printStackTrace(pos);
+		pos.close();
+		try {
+			bos.close();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
-
+		buf += bos.toString();
 		String str = "[" + dateTime() + "][ERROR]" + "Exception ID " + id
 				+ ": \n" + buf + "\n";
 		append(str);
