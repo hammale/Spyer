@@ -71,7 +71,7 @@ public class Updater {
 					out.close();
 				}
 			} catch (IOException ioe) {
-				SpyerLog.warning(ioe.getMessage());
+				SpyerCommandsLog.warning(ioe.getMessage());
 			}
 		}
 	}

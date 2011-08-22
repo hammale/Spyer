@@ -6,6 +6,7 @@ import java.util.TimerTask;
 
 import net.minecraft.server.Packet20NamedEntitySpawn;
 import net.minecraft.server.Packet29DestroyEntity;
+import nickguletskii200.Packets.PacketHand;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
@@ -21,6 +22,7 @@ import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.getspout.spoutapi.SpoutManager;
 
 /**
  * Handle events for all Player related events
@@ -36,6 +38,19 @@ public class SpyerFunPlayerListener extends PlayerListener {
 
 	public SpyerFunPlayerListener(SpyerFun _plug) {
 		plugin = _plug;
+		SpoutManager.getPacketManager().addListener(5, new PacketHand(this));
+		SpoutManager.getPacketManager().addListener(17, new PacketHand(this));
+		SpoutManager.getPacketManager().addListener(18, new PacketHand(this));
+		SpoutManager.getPacketManager().addListener(19, new PacketHand(this));
+		SpoutManager.getPacketManager().addListener(20, new PacketHand(this));
+		SpoutManager.getPacketManager().addListener(28, new PacketHand(this));
+		SpoutManager.getPacketManager().addListener(30, new PacketHand(this));
+		SpoutManager.getPacketManager().addListener(31, new PacketHand(this));
+		SpoutManager.getPacketManager().addListener(32, new PacketHand(this));
+		SpoutManager.getPacketManager().addListener(33, new PacketHand(this));
+		SpoutManager.getPacketManager().addListener(34, new PacketHand(this));
+		SpoutManager.getPacketManager().addListener(38, new PacketHand(this));
+		SpoutManager.getPacketManager().addListener(39, new PacketHand(this));
 	}
 
 	public boolean isCorrect(Integer i) {
@@ -57,12 +72,12 @@ public class SpyerFunPlayerListener extends PlayerListener {
 		for (Player p : playerList) {
 			invisible(player, p);
 		}
-//		if (commonPlayers.contains(event.getPlayer().getName())) {
-//			if (!(event.getTo().getBlock().getLightLevel() > plugin
-//					.getSettings().lightlevel)) {
-//				reappear(event.getPlayer());
-//			}
-//		}
+		// if (commonPlayers.contains(event.getPlayer().getName())) {
+		// if (!(event.getTo().getBlock().getLightLevel() > plugin
+		// .getSettings().lightlevel)) {
+		// reappear(event.getPlayer());
+		// }
+		// }
 	}
 
 	public void onPlayerInteract(PlayerInteractEvent event) {
@@ -80,16 +95,17 @@ public class SpyerFunPlayerListener extends PlayerListener {
 		if (coolDown.containsKey(event.getPlayer().getName())) {
 			if (System.currentTimeMillis()
 					- coolDown.get(event.getPlayer().getName()) < plugin
-					.getSettings().coolDown) {
+						.getSettings().coolDown) {
 				return;
 			}
 		}
-//		if (plugin.getSettings().shadows) {
-//			if (!(event.getPlayer().getLocation().getBlock().getLightLevel() <= plugin
-//					.getSettings().lightlevel)) {
-//				return;
-//			}
-//		}
+		// if (plugin.getSettings().shadows) {
+		// if (!(event.getPlayer().getLocation().getBlock().getLightLevel() <=
+		// plugin
+		// .getSettings().lightlevel)) {
+		// return;
+		// }
+		// }
 		plugin.getSettings().load();
 		if (isCorrect(event.getItem().getTypeId())) {
 			if (commonPlayers.contains(event.getPlayer().getName())) {
@@ -105,14 +121,14 @@ public class SpyerFunPlayerListener extends PlayerListener {
 		}
 	}
 
-//	public void onPlayerMove(PlayerMoveEvent event) {
-//		if (commonPlayers.contains(event.getPlayer().getName())) {
-//			if (!(event.getTo().getBlock().getLightLevel() > plugin
-//					.getSettings().lightlevel)) {
-//				reappear(event.getPlayer());
-//			}
-//		}
-//	}
+	// public void onPlayerMove(PlayerMoveEvent event) {
+	// if (commonPlayers.contains(event.getPlayer().getName())) {
+	// if (!(event.getTo().getBlock().getLightLevel() > plugin
+	// .getSettings().lightlevel)) {
+	// reappear(event.getPlayer());
+	// }
+	// }
+	// }
 
 	public boolean outsideSight(Location loc1, Location loc2) {
 		World w1 = loc1.getWorld();
@@ -170,8 +186,12 @@ public class SpyerFunPlayerListener extends PlayerListener {
 		}
 	}
 
+	public boolean continueSend(Player player, String name) {
+		return !((commonPlayers.contains(name)) && !plugin.getSettings()
+				.isSeeAll(name));
+	}
+
 	public void vanish(final Player player, int time) {
-		final String name = player.getName();
 		if (commonPlayers.contains(player.getName())) {
 			return;
 		}
@@ -182,13 +202,7 @@ public class SpyerFunPlayerListener extends PlayerListener {
 			public void run() {
 				// TODO Auto-generated method stub
 				try {
-					if (player == null) {
-						plt.cancel();
-						timers.remove(name);
-						commonPlayers.remove(name);
-						playerHideTree.remove(name);
-						return;
-					}
+					System.out.println(player.getItemInHand().getAmount());
 					if (!player.isOnline()) {
 						plt.cancel();
 						timers.remove(player.getName());
@@ -198,12 +212,15 @@ public class SpyerFunPlayerListener extends PlayerListener {
 					}
 					if (player.getItemInHand().getAmount() == 1
 							&& isCorrect(player.getItemInHand().getTypeId())) {
+						System.out.println("hi");
 						reappear(player);
 						commonPlayers.remove(player.getName());
 						playerHideTree.remove(player.getName());
 						plt.cancel();
 						timers.remove(player.getName());
-						player.setItemInHand(null);
+						player.getInventory().clear(
+								player.getInventory().getHeldItemSlot());
+						// player.setItemInHand(null);
 						return;
 					}
 					Player[] playerList = plugin.getServer().getOnlinePlayers();
@@ -252,8 +269,14 @@ public class SpyerFunPlayerListener extends PlayerListener {
 			invisible(player, p);
 		}
 		player.sendMessage(ChatColor.RED + "You are now invisible!");
-		player.getItemInHand()
-				.setAmount(player.getItemInHand().getAmount() - 1);
+
+		if (player.getItemInHand().getAmount() == 1) {
+			System.out.println("hi");
+			player.setItemInHand(null);
+		} else {
+			player.getItemInHand().setAmount(
+					player.getItemInHand().getAmount() - 1);
+		}
 	}
 
 	public void reappear(Player player) {
@@ -276,9 +299,17 @@ public class SpyerFunPlayerListener extends PlayerListener {
 	}
 
 	public void onItemHeldChange(PlayerItemHeldEvent event) {
-		reappear(event.getPlayer());
-		timers.get(event.getPlayer().getName()).cancel();
-		timers.remove(event.getPlayer().getName());
+		if (commonPlayers.contains(event.getPlayer().getName())) {
+
+			reappear(event.getPlayer());
+		}
+		// timers.get(event.getPlayer().getName()).cancel();
+		// timers.remove(event.getPlayer().getName());
+		// ItemStack is =
+		// event.getPlayer().getInventory().getItem(event.getPreviousSlot());
+		// System.out.println(is.getAmount());
+		// is.setAmount(is.getAmount());
+		// System.out.println(is.getAmount());
 	}
 
 	public void onPlayerJoin(PlayerJoinEvent event) {

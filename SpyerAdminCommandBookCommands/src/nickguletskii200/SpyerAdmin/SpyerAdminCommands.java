@@ -27,7 +27,7 @@ public class SpyerAdminCommands extends JavaPlugin implements IMainGetters {
 
 	public SpyerAdminCommands() {
 		super();
-		SpyerLog.sa = this;
+		SpyerLogCommands.sa = this;
 		Debugging.start();
 	}
 
@@ -52,10 +52,10 @@ public class SpyerAdminCommands extends JavaPlugin implements IMainGetters {
 				Debugging.log("Downloaded script.js");
 			} else {
 				Debugging.log("Repo not found. Update disabled.");
-				SpyerLog.info("SpyerAdmin updates are disabled.");
+				SpyerLogCommands.info("SpyerAdmin updates are disabled.");
 			}
 		} catch (IOException e) {
-			SpyerLog
+			SpyerLogCommands
 					.error("SpyerAdmin script update failed: " + e.getMessage());
 			Debugging.logException(e, "Update" + System.nanoTime());
 		}
@@ -63,7 +63,7 @@ public class SpyerAdminCommands extends JavaPlugin implements IMainGetters {
 		ch = new CustomHandling(this);
 		Debugging.log("Constructed.");
 		PluginDescriptionFile pdfFile = this.getDescription();
-		SpyerLog.info(pdfFile.getName() + " module version "
+		SpyerLogCommands.info(pdfFile.getName() + " module version "
 				+ pdfFile.getVersion() + ", a " + pdfFile.getDescription()
 				+ ", is active. Part of the Spyer package by "
 				+ pdfFile.getAuthors().toString());
@@ -115,7 +115,7 @@ public class SpyerAdminCommands extends JavaPlugin implements IMainGetters {
 			Debugging.logException(e, key);
 			Debugging.log("END EXCEPTION REPORT: WHILE EXECUTING COMMAND. ID: "
 					+ key);
-			SpyerLog
+			SpyerLogCommands
 					.error("Exception caught in SpyerAdmin! Exception ID "
 							+ key
 							+ ". Please upload spyeradmin.log and notify the author (nickguletskii200).");

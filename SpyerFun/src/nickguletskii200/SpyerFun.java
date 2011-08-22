@@ -52,6 +52,8 @@ public class SpyerFun extends JavaPlugin {
 				Priority.Monitor, this);
 		pm.registerEvent(Event.Type.PLAYER_TELEPORT, playerListener,
 				Priority.Monitor, this);
+		pm.registerEvent(Event.Type.PLAYER_ITEM_HELD, playerListener,
+				Priority.Monitor, this);
 		pm.registerEvent(Event.Type.ENTITY_TARGET, ml, Priority.Monitor, this);
 		pm.registerEvent(Event.Type.ENTITY_DAMAGE, ml, Priority.Monitor, this);
 	}

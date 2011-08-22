@@ -17,8 +17,6 @@ public class SafeSpyerCheck {
 
 	public SafeSpyerCheck(ISpyerAdmin plug) {
 		plugin = plug;
-
-		System.out.println(plugin.toString());
 	}
 
 	public boolean hasPermission(CommandSender send, String perm) {

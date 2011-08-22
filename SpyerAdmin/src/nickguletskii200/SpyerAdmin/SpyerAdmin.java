@@ -26,6 +26,7 @@ public class SpyerAdmin extends JavaPlugin implements ISpyerAdmin {
 	Logger log;
 	private SpyerSettings ss;
 	private final SpyerAdminPlayerListener playerListener;
+	//A list o people currently spying.  
 	private HashSet<String> spying = new HashSet<String>();
 	public ICustomHandling ch;
 	//HashSet<String> antigrief = new HashSet<String>();

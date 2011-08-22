@@ -127,7 +127,7 @@ public class Debugging {
 				try {
 					bw.close();
 				} catch (IOException ioe2) {
-					SpyerLog
+					SpyerLogCommands
 							.warning("IO exception while closing advanced log!");
 				}
 		}

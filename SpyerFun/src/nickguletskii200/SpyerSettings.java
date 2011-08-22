@@ -10,11 +10,9 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionDefault;
 import org.yaml.snakeyaml.Yaml;
-
-import com.nijiko.permissions.PermissionHandler;
-import com.nijikokun.bukkit.Permissions.Permissions;
 
 /**
  * Was used for configs. Now used for configs + permissions.
@@ -24,8 +22,6 @@ import com.nijikokun.bukkit.Permissions.Permissions;
 public class SpyerSettings extends HashMap<String, Object> {
 
 	private static final long serialVersionUID = 7771694943392484453L;
-	private PermissionHandler Permissions;
-	private boolean UsePermissions;
 	private SpyerFun plugin;
 	public int coolDown = 0;
 	public boolean onDamage = false;
@@ -33,6 +29,7 @@ public class SpyerSettings extends HashMap<String, Object> {
 	public boolean noDamage = false;
 	public boolean shadows = false;
 	public byte lightlevel = 7;
+
 	public SpyerSettings(SpyerFun plugin) {
 		this.put("refreshRate", 1000);
 		this.put("syncWithScheduler", false);
@@ -89,10 +86,8 @@ public class SpyerSettings extends HashMap<String, Object> {
 	public boolean canUseFun(String name) {
 		try {
 			Player player = plugin.getServer().getPlayer(name);
-			if (UsePermissions) {
-				return this.Permissions.has(player, "spyer.fun");
-			}
-			return true;
+			return player.hasPermission(new Permission("spyer.fun",
+					PermissionDefault.NOT_OP));
 		} catch (Exception e) {
 			SpyerLog.error(e.getMessage());
 		}
@@ -176,26 +171,9 @@ public class SpyerSettings extends HashMap<String, Object> {
 			System.out
 					.println("Error: could not fetch settings from YAML document. Make sure it is correct.");
 		}
-		setupPermissions();
-	}
-
-	private void setupPermissions() {
-		Plugin test = plugin.getServer().getPluginManager().getPlugin(
-				"Permissions");
-		if (this.Permissions == null) {
-			if (test != null) {
-				UsePermissions = true;
-				this.Permissions = ((Permissions) test).getHandler();
-			} else {
-				UsePermissions = false;
-			}
-		}
 	}
 
 	public boolean canUse(Player player, String name) {
-		if (UsePermissions) {
-			return this.Permissions.has(player, name);
-		}
-		return player.isOp();
+		return player.hasPermission(new Permission(name, PermissionDefault.OP));
 	}
 }

@@ -2,7 +2,7 @@ name: SpyerAdminCommands
 
 main: nickguletskii200.SpyerAdmin.SpyerAdminCommands
 
-version: 1.4 stable
+version: 1.5 stable
 
 description: spying utility for administrators and moderators (scripted commands module)
 

@@ -21,8 +21,7 @@ public class SimpleClassLoader {
 		return clazz;
 	}
 
-	@SuppressWarnings("unchecked")
-	public Method getFirstMethod(Class cl, String name) {
+	public Method getFirstMethod(@SuppressWarnings("rawtypes") Class cl, String name) {
 		for (Method m : cl.getMethods()) {
 			if (m.getName().equals(name)) {
 				return m;

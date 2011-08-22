@@ -6,9 +6,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Timer;
-import java.util.TimerTask;
+
 import net.minecraft.server.Packet20NamedEntitySpawn;
 import net.minecraft.server.Packet29DestroyEntity;
+import nickguletskii200.SpyerAdmin.Packets.PacketHand;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -22,6 +24,7 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.getspout.spoutapi.SpoutManager;
 
 /**
  * Handle events for all player related events
@@ -43,6 +46,19 @@ public class SpyerAdminPlayerListener extends PlayerListener {
 
 	public SpyerAdminPlayerListener(SpyerAdmin _plug) {
 		plugin = _plug;
+		SpoutManager.getPacketManager().addListener(5, new PacketHand(this));
+		SpoutManager.getPacketManager().addListener(17, new PacketHand(this));
+		SpoutManager.getPacketManager().addListener(18, new PacketHand(this));
+		SpoutManager.getPacketManager().addListener(19, new PacketHand(this));
+		SpoutManager.getPacketManager().addListener(20, new PacketHand(this));
+		SpoutManager.getPacketManager().addListener(28, new PacketHand(this));
+		SpoutManager.getPacketManager().addListener(30, new PacketHand(this));
+		SpoutManager.getPacketManager().addListener(31, new PacketHand(this));
+		SpoutManager.getPacketManager().addListener(32, new PacketHand(this));
+		SpoutManager.getPacketManager().addListener(33, new PacketHand(this));
+		SpoutManager.getPacketManager().addListener(34, new PacketHand(this));
+		SpoutManager.getPacketManager().addListener(38, new PacketHand(this));
+		SpoutManager.getPacketManager().addListener(39, new PacketHand(this));
 	}
 
 	// Tried to make it as fast as I could - this will obviously save some
@@ -68,6 +84,11 @@ public class SpyerAdminPlayerListener extends PlayerListener {
 		} else {
 			return true;
 		}
+	}
+
+	public boolean continueSend(Player player, String name) {
+		return !((commonPlayers.contains(name)) && !plugin.getSettings()
+				.isSeeAll(name));
 	}
 
 	public void invisible(Player p1, Player p2, boolean force) {
@@ -117,71 +138,18 @@ public class SpyerAdminPlayerListener extends PlayerListener {
 		}
 		commonPlayers.add(player.getName());
 		plugin.getSettings().load();
-		if (!plugin.getSettings().getSync()) {
-			final Timer plt = new Timer();
-			TimerTask tsk = new TimerTask() {
-				@Override
-				public void run() {
-					// TODO Auto-generated method stub
-					if (player == null) {
-						this.cancel();
-						timers.remove(name);
-						commonPlayers.remove(name);
-						playerHideTree.remove(name);
-						return;
-					}
-					if (!player.isOnline()) {
-						this.cancel();
-						timers.remove(player.getName());
-						commonPlayers.remove(player.getName());
-						playerHideTree.remove(player.getName());
-						return;
-					}
-					Player[] playerList = plugin.getServer().getOnlinePlayers();
-					for (Player p : playerList) {
-						invisible(player, p, true);
-					}
-					try {
-						ind.indicate(player, true);
-					} catch (FileNotFoundException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-			};
-			timers.put(player.getName(), plt);
-			plt.scheduleAtFixedRate(tsk, 0, plugin.getSettings()
-					.getRefreshRate());
-		} else {
-			schedulers.put(player.getName(), plugin.getServer().getScheduler()
-					.scheduleAsyncRepeatingTask(plugin, new Runnable() {
-
-						@Override
-						public void run() {
-							// TODO Auto-generated method stub
-							if (player == null) {
-								plugin.getServer().getScheduler().cancelTask(
-										schedulers.get(name));
-								schedulers.remove(name);
-								commonPlayers.remove(name);
-								playerHideTree.remove(name);
-								return;
-							}
+		schedulers.put(player.getName(), plugin.getServer().getScheduler()
+				.scheduleAsyncRepeatingTask(plugin, new Runnable() {
+					@Override
+					public void run() {
+						try {
 							if (!player.isOnline()) {
-								plugin.getServer().getScheduler().cancelTask(
-										schedulers.get(name));
+								plugin.getServer().getScheduler()
+										.cancelTask(schedulers.get(name));
 								schedulers.remove(name);
 								commonPlayers.remove(player.getName());
 								playerHideTree.remove(player.getName());
 								return;
-							}
-							Player[] playerList = plugin.getServer()
-									.getOnlinePlayers();
-							for (Player p : playerList) {
-								invisible(player, p, true);
 							}
 							try {
 								ind.indicate(player, true);
@@ -192,10 +160,11 @@ public class SpyerAdminPlayerListener extends PlayerListener {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
+						} catch (Exception e) {
 						}
-
-					}, 0, plugin.getSettings().getRefreshRate()));
-		}
+					}
+				}, 0, plugin.getSettings().getRefreshRate()));
+		// }
 		Player[] playerList = plugin.getServer().getOnlinePlayers();
 		for (Player p : playerList) {
 			invisible(player, p, false);
@@ -209,8 +178,8 @@ public class SpyerAdminPlayerListener extends PlayerListener {
 			timers.remove(player.getName());
 		}
 		if (schedulers.containsKey(player.getName())) {
-			plugin.getServer().getScheduler().cancelTask(
-					schedulers.get(player.getName()));
+			plugin.getServer().getScheduler()
+					.cancelTask(schedulers.get(player.getName()));
 			schedulers.remove(player.getName());
 		}
 	}
@@ -291,8 +260,8 @@ public class SpyerAdminPlayerListener extends PlayerListener {
 	@SuppressWarnings("static-access")
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		if (commonPlayers.contains(event.getPlayer().getName())) {
-			hideOnJoin.put(event.getPlayer().getName(), plugin.antigrief
-					.contains(event.getPlayer().getName()));
+			hideOnJoin.put(event.getPlayer().getName(),
+					plugin.antigrief.contains(event.getPlayer().getName()));
 		}
 		if (plugin.antigrief.contains(event.getPlayer().getName())) {
 			event.setQuitMessage(null);

@@ -13,22 +13,21 @@ import nickguletskii200.SpyerAdminShared.ISpyerAdmin;
 import nickguletskii200.SpyerAdminShared.ISpyerSettings;
 
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionDefault;
 import org.yaml.snakeyaml.Yaml;
-
-import com.nijiko.permissions.PermissionHandler;
-import com.nijikokun.bukkit.Permissions.Permissions;
 
 /**
  * Main config class. Now with permissions.
  * 
  * @author nickguletskii200
  */
-public class SpyerSettings extends HashMap<String, Object> implements ISpyerSettings {
+public class SpyerSettings extends HashMap<String, Object> implements
+		ISpyerSettings {
 
 	private static final long serialVersionUID = 7771694943392484453L;
-	private PermissionHandler Permissions;
-	private Boolean UsePermissions = null;
+	// private PermissionHandler Permissions;
+	// private Boolean UsePermissions = null;
 	private ISpyerAdmin plugin;
 	public boolean pickup = false;
 	public boolean invincible = false;
@@ -43,7 +42,9 @@ public class SpyerSettings extends HashMap<String, Object> implements ISpyerSett
 		this.plugin = plugin;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see nickguletskii200.SpyerAdmin.ISpyerSettings#getRefreshRate()
 	 */
 	public int getRefreshRate() {
@@ -56,7 +57,9 @@ public class SpyerSettings extends HashMap<String, Object> implements ISpyerSett
 		return 1000;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see nickguletskii200.SpyerAdmin.ISpyerSettings#setRefreshRate(int)
 	 */
 	public void setRefreshRate(int i) {
@@ -64,7 +67,9 @@ public class SpyerSettings extends HashMap<String, Object> implements ISpyerSett
 		this.put("refreshRate", i);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see nickguletskii200.SpyerAdmin.ISpyerSettings#getSync()
 	 */
 	public boolean getSync() {
@@ -77,7 +82,9 @@ public class SpyerSettings extends HashMap<String, Object> implements ISpyerSett
 		return false;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see nickguletskii200.SpyerAdmin.ISpyerSettings#setSync(boolean)
 	 */
 	public void setSync(boolean b) {
@@ -85,7 +92,9 @@ public class SpyerSettings extends HashMap<String, Object> implements ISpyerSett
 		this.put("syncWithScheduler", b);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see nickguletskii200.SpyerAdmin.ISpyerSettings#isSpy(java.lang.String)
 	 */
 	public boolean isSpy(String name) {
@@ -96,8 +105,12 @@ public class SpyerSettings extends HashMap<String, Object> implements ISpyerSett
 		return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see nickguletskii200.SpyerAdmin.ISpyerSettings#isVisibleByMobs(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * nickguletskii200.SpyerAdmin.ISpyerSettings#isVisibleByMobs(java.lang.
+	 * String)
 	 */
 	public boolean isVisibleByMobs(String name) {
 		try {
@@ -108,8 +121,11 @@ public class SpyerSettings extends HashMap<String, Object> implements ISpyerSett
 		return true;
 	}
 
-	/* (non-Javadoc)
-	 * @see nickguletskii200.SpyerAdmin.ISpyerSettings#canUseFun(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * nickguletskii200.SpyerAdmin.ISpyerSettings#canUseFun(java.lang.String)
 	 */
 	public boolean canUseFun(String name) {
 		try {
@@ -119,40 +135,40 @@ public class SpyerSettings extends HashMap<String, Object> implements ISpyerSett
 		return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see nickguletskii200.SpyerAdmin.ISpyerSettings#isSeeAll(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * nickguletskii200.SpyerAdmin.ISpyerSettings#isSeeAll(java.lang.String)
 	 */
 	public boolean isSeeAll(String name) {
-		String str = "call "+name+"; ";
 		// try {
 		boolean ret = false;
 		if (seeAllCache.containsKey(name)) {
 			booleanAndInt b = seeAllCache.get(name);
 			if (System.currentTimeMillis() - b.time <= step) {
-				str+=("Permission from cache.; ");
 				ret = b.result;
 			} else {
-				str+=("Permission from perm.; ");
 				ret = canUse(plugin.getServer().getPlayer(name), "spyer.seeAll");
 				seeAllCache.get(name).time = System.currentTimeMillis();
 				seeAllCache.get(name).result = ret;
 			}
 		} else {
-			str+=("Permission from perm.; ");
 			ret = canUse(plugin.getServer().getPlayer(name), "spyer.seeAll");
 			booleanAndInt tmp = new booleanAndInt();
 			tmp.time = System.currentTimeMillis();
 			tmp.result = ret;
 			seeAllCache.put(name, tmp);
 		}
-		str+=("ret: " + ret);
 		return ret;
 		// /} catch (Exception e) {
 		// }
 		// return false;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see nickguletskii200.SpyerAdmin.ISpyerSettings#dump()
 	 */
 	public void dump() {
@@ -169,7 +185,9 @@ public class SpyerSettings extends HashMap<String, Object> implements ISpyerSett
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see nickguletskii200.SpyerAdmin.ISpyerSettings#load()
 	 */
 	@SuppressWarnings("unchecked")
@@ -227,32 +245,17 @@ public class SpyerSettings extends HashMap<String, Object> implements ISpyerSett
 			System.out
 					.println("Error: could not fetch settings from YAML document. Make sure it is correct.");
 		}
-		if (UsePermissions == null) {
-			setupPermissions();
-		}
 	}
 
-	private void setupPermissions() {
-		Plugin test = plugin.getServer().getPluginManager().getPlugin(
-				"Permissions");
-		if (this.Permissions == null) {
-			if (test != null) {
-				UsePermissions = true;
-				this.Permissions = ((Permissions) test).getHandler();
-			} else {
-				UsePermissions = false;
-			}
-		}
-	}
-
-	/* (non-Javadoc)
-	 * @see nickguletskii200.SpyerAdmin.ISpyerSettings#canUse(org.bukkit.entity.Player, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * nickguletskii200.SpyerAdmin.ISpyerSettings#canUse(org.bukkit.entity.Player
+	 * , java.lang.String)
 	 */
 	public boolean canUse(Player player, String name) {
-		if (UsePermissions) {
-			return this.Permissions.has(player, name);
-		}
-		return player.isOp();
+		return player.hasPermission(new Permission(name, PermissionDefault.OP));
 	}
 }
 
