@@ -87,7 +87,7 @@ public class SpyerSettings extends HashMap<String, Object> {
 		try {
 			Player player = plugin.getServer().getPlayer(name);
 			return player.hasPermission(new Permission("spyer.fun",
-					PermissionDefault.NOT_OP));
+					PermissionDefault.TRUE));
 		} catch (Exception e) {
 			SpyerLog.error(e.getMessage());
 		}
