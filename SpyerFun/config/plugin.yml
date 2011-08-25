@@ -7,4 +7,17 @@ description: spying utility for normal players
 authors:
   - nickguletskii200
 
-version: 1.5 stable
+version: 1.5_1 stable
+
+website: http://forums.bukkit.org/threads/Spyer.6295/
+
+permissions:
+ spyer.fun:
+   description: Allows players to use specified items to become invisible.
+   default: true
+ spyer.seeAll:
+   description: Allows users with this permission to see invisible users.
+   defualt: op
+ spyer.stopmobs.fun:
+   description: Allow SpyerFun to stop mobs from picking up invisible players with this permission.
+   default: true

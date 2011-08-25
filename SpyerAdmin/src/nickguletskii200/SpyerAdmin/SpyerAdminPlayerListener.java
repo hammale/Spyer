@@ -87,8 +87,9 @@ public class SpyerAdminPlayerListener extends PlayerListener {
 	}
 
 	public boolean continueSend(Player player, String name) {
-		return !((commonPlayers.contains(name)) && !plugin.getSettings()
-				.isSeeAll(name));
+		boolean canSee = plugin.getSettings().isSeeAll(player.getName());
+		boolean isHidden = commonPlayers.contains(name);
+		return (canSee||!isHidden);
 	}
 
 	public void invisible(Player p1, Player p2, boolean force) {

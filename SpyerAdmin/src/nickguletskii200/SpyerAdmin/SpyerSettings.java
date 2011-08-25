@@ -255,7 +255,9 @@ public class SpyerSettings extends HashMap<String, Object> implements
 	 * , java.lang.String)
 	 */
 	public boolean canUse(Player player, String name) {
-		return player.hasPermission(new Permission(name, PermissionDefault.OP));
+		boolean flag = player.hasPermission(new Permission(name,
+				PermissionDefault.OP));
+		return flag;
 	}
 }
 

@@ -2,11 +2,11 @@ package nickguletskii200.SpyerAdmin.Packets;
 
 import java.lang.reflect.Field;
 
+import net.minecraft.server.EntityPlayer;
 import nickguletskii200.SpyerAdmin.SpyerAdminPlayerListener;
 
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.CraftWorld;
-import org.bukkit.entity.Entity;
+import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.Player;
 import org.getspout.spout.packet.standard.MCCraftPacket;
 import org.getspout.spoutapi.packet.listener.PacketListener;
@@ -34,16 +34,16 @@ public class PacketHand implements PacketListener {
 				return "{!?}Null!{!?}";
 			}
 			i = (Integer) f.get((((MCCraftPacket) packet).getPacket()));
-			Entity e = ((CraftWorld) Bukkit.getServer().getWorld(""))
-					.getHandle().getEntity(i).getBukkitEntity();
-			if (e instanceof Player) {
-				System.out.println(((Player) e).getName());
-				return ((Player) e).getName();
-			} else {
-				return "{!?}UnknownPlayer!{!?}";
+			for (Object e : ((CraftServer) Bukkit.getServer()).getHandle().players) {
+				EntityPlayer ep = (EntityPlayer) e;
+				if (ep.id == i) {
+					return ep.name;
+				}
 			}
+			return "{!?}Notaplayer!{!?}";
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
 		return "{!?}Error!{!?}";
 	}

@@ -2,12 +2,16 @@ name: SpyerAdmin
 
 main: nickguletskii200.SpyerAdmin.SpyerAdmin
 
-version: 1.5 stable
+version: 1.5_1 stable
+
+website: http://forums.bukkit.org/threads/Spyer.6295/
 
 description: spying utility for administrators and moderators (main module)
+
 depend:
   - SpyerAdminCommands
   - Spout
+
 authors:
   - nickguletskii200
 
@@ -18,3 +22,14 @@ commands:
   quit:
     description: Hides the player until used again, simulates quitting
     usage: /quit
+
+permissions:
+ spyer.spy:
+   description: Allows people with this permission to enter spy mode, both with pseudo quit and no pseudo quit.
+   default: op
+ spyer.seeAll:
+   description: Allows users with this permission to see invisible users.
+   defualt: op
+ spyer.stopmobs.admin:
+   description: Allow SpyerAdmin to stop mobs from picking up invisible players with this permission.
+   default: op
