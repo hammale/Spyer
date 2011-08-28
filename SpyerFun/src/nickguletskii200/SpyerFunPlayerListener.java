@@ -187,6 +187,9 @@ public class SpyerFunPlayerListener extends PlayerListener {
 	}
 
 	public boolean continueSend(Player player, String name) {
+		if (player == null) {
+			return true;
+		}
 		return !((commonPlayers.contains(name)) && !plugin.getSettings()
 				.isSeeAll(name));
 	}

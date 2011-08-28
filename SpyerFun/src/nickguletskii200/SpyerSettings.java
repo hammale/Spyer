@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
@@ -38,8 +39,11 @@ public class SpyerSettings extends HashMap<String, Object> {
 
 	public boolean isVisibleByMobs(String name) {
 		try {
-			return !canUse(plugin.getServer().getPlayer(name),
-					"spyer.stopmobs.fun");
+			Player player = Bukkit.getServer().getPlayer(name);
+			if (player == null) {
+				return false;
+			}
+			return !canUse(player, "spyer.stopmobs.fun");
 		} catch (Exception e) {
 		}
 		return true;
@@ -77,7 +81,11 @@ public class SpyerSettings extends HashMap<String, Object> {
 
 	public boolean isSpy(String name) {
 		try {
-			return canUse(plugin.getServer().getPlayer(name), "spyer.spy");
+			Player player = Bukkit.getServer().getPlayer(name);
+			if (player == null) {
+				return false;
+			}
+			return canUse(player, "spyer.spy");
 		} catch (Exception e) {
 		}
 		return false;
@@ -86,6 +94,9 @@ public class SpyerSettings extends HashMap<String, Object> {
 	public boolean canUseFun(String name) {
 		try {
 			Player player = plugin.getServer().getPlayer(name);
+			if (player == null) {
+				return false;
+			}
 			return player.hasPermission(new Permission("spyer.fun",
 					PermissionDefault.TRUE));
 		} catch (Exception e) {
@@ -97,7 +108,11 @@ public class SpyerSettings extends HashMap<String, Object> {
 	public boolean isSeeAll(String name) {
 
 		try {
-			return canUse(plugin.getServer().getPlayer(name), "spyer.seeAll");
+			Player player = Bukkit.getServer().getPlayer(name);
+			if (player == null) {
+				return false;
+			}
+			return canUse(player, "spyer.seeAll");
 		} catch (Exception e) {
 		}
 		return false;

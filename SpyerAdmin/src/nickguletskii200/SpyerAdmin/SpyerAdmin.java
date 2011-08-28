@@ -1,15 +1,15 @@
 package nickguletskii200.SpyerAdmin;
 
-import java.util.HashSet; 
+import java.util.HashSet;
 import java.util.logging.Logger;
 
 import nickguletskii200.SpyerAdminShared.ICustomHandling;
 import nickguletskii200.SpyerAdminShared.IMainGetters;
-import nickguletskii200.SpyerAdminShared.ISpyerAdmin; 
- 
+import nickguletskii200.SpyerAdminShared.ISpyerAdmin;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender; 
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
@@ -26,10 +26,10 @@ public class SpyerAdmin extends JavaPlugin implements ISpyerAdmin {
 	Logger log;
 	private SpyerSettings ss;
 	private final SpyerAdminPlayerListener playerListener;
-	//A list o people currently spying.  
+	// A list o people currently spying.
 	private HashSet<String> spying = new HashSet<String>();
 	public ICustomHandling ch;
-	//HashSet<String> antigrief = new HashSet<String>();
+	// HashSet<String> antigrief = new HashSet<String>();
 	private MobListener ml;
 	private boolean firstrun = true;
 
@@ -66,7 +66,7 @@ public class SpyerAdmin extends JavaPlugin implements ISpyerAdmin {
 		pm.registerEvent(Event.Type.PLAYER_QUIT, playerListener,
 				Priority.Monitor, this);
 		pm.registerEvent(Event.Type.PLAYER_CHAT, playerListener,
-				Priority.Monitor, this);
+				getSettings().chatPriority, this);
 		pm.registerEvent(Event.Type.PLAYER_TELEPORT, playerListener,
 				Priority.Monitor, this);
 		pm.registerEvent(Event.Type.PLAYER_PICKUP_ITEM, playerListener,
@@ -96,11 +96,9 @@ public class SpyerAdmin extends JavaPlugin implements ISpyerAdmin {
 			Player plr = getServer().getPlayer(str);
 			// plr.sendMessage("Reload in progress! Invisiblity will be lost.");
 			if (getSettings().wait) {
-				plr
-						.sendMessage("Reload in progress! In 10 seconds invisiblity will be lost.");
+				plr.sendMessage("Reload in progress! In 10 seconds invisiblity will be lost.");
 			} else {
-				plr
-						.sendMessage("Reload in progress! Invisiblity will be lost.");
+				plr.sendMessage("Reload in progress! Invisiblity will be lost.");
 			}
 		}
 		if (getSettings().wait) {
@@ -114,8 +112,8 @@ public class SpyerAdmin extends JavaPlugin implements ISpyerAdmin {
 		for (String str : getPlayerListener().commonPlayers) {
 			Player plr = getServer().getPlayer(str);
 			getPlayerListener().reappear(plr);
-			getPlayerListener().hideOnJoin.put(plr.getName(), antigrief
-					.contains(plr.getName()));
+			getPlayerListener().hideOnJoin.put(plr.getName(),
+					antigrief.contains(plr.getName()));
 			getPlayerListener().quit(plr);
 		}
 	}
@@ -227,10 +225,9 @@ public class SpyerAdmin extends JavaPlugin implements ISpyerAdmin {
 			Debugging.logHashMap(this.playerListener.playerHideTree, key);
 			Debugging.log("END EXCEPTION REPORT: WHILE EXECUTING COMMAND. ID: "
 					+ key);
-			SpyerLog
-					.error("Exception caught in SpyerAdmin! Exception ID "
-							+ key
-							+ ". Please upload spyeradmin.log and notify the author (nickguletskii200).");
+			SpyerLog.error("Exception caught in SpyerAdmin! Exception ID "
+					+ key
+					+ ". Please upload spyeradmin.log and notify the author (nickguletskii200).");
 			return true;
 		}
 		return false;

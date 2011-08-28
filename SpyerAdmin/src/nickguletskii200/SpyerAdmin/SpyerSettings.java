@@ -12,7 +12,9 @@ import java.util.HashMap;
 import nickguletskii200.SpyerAdminShared.ISpyerAdmin;
 import nickguletskii200.SpyerAdminShared.ISpyerSettings;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 import org.yaml.snakeyaml.Yaml;
@@ -34,6 +36,7 @@ public class SpyerSettings extends HashMap<String, Object> implements
 	public boolean noHit = false;
 	public boolean wait = true;
 	private long step = 8000;
+	public Event.Priority chatPriority = Event.Priority.Monitor;
 	private HashMap<String, booleanAndInt> seeAllCache = new HashMap<String, booleanAndInt>();
 
 	public SpyerSettings(ISpyerAdmin plugin) {
@@ -129,7 +132,11 @@ public class SpyerSettings extends HashMap<String, Object> implements
 	 */
 	public boolean canUseFun(String name) {
 		try {
-			return canUse(plugin.getServer().getPlayer(name), "spyer.fun");
+			Player player = Bukkit.getServer().getPlayer(name);
+			if (player == null) {
+				return false;
+			}
+			return canUse(player, "spyer.fun");
 		} catch (Exception e) {
 		}
 		return false;
@@ -240,6 +247,10 @@ public class SpyerSettings extends HashMap<String, Object> implements
 			if (sysSS.containsKey("wait")) {
 				wait = (Boolean) sysSS.get("wait");
 			}
+			if (sysSS.containsKey("chatPriority")) {
+				chatPriority = Event.Priority.valueOf((String) sysSS
+						.get("chatPriority"));
+			}
 
 		} catch (Exception e) {
 			System.out
@@ -255,6 +266,9 @@ public class SpyerSettings extends HashMap<String, Object> implements
 	 * , java.lang.String)
 	 */
 	public boolean canUse(Player player, String name) {
+		if (player == null) {
+			return false;
+		}
 		boolean flag = player.hasPermission(new Permission(name,
 				PermissionDefault.OP));
 		return flag;

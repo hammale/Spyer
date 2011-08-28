@@ -22,6 +22,10 @@ public class PacketHand implements PacketListener {
 
 	@Override
 	public boolean checkPacket(Player player, MCPacket packet) {
+		if (player == null) {
+			System.out
+					.println("[SPYER] Hey Spout, why are you making me check a packet addressed at nobody? I don't know what to do!");
+		}
 		return spyer.continueSend(player, name(packet));
 	}
 

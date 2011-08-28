@@ -11,6 +11,7 @@ import net.minecraft.server.Packet20NamedEntitySpawn;
 import net.minecraft.server.Packet29DestroyEntity;
 import nickguletskii200.SpyerAdmin.Packets.PacketHand;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -87,9 +88,12 @@ public class SpyerAdminPlayerListener extends PlayerListener {
 	}
 
 	public boolean continueSend(Player player, String name) {
+		if (player == null) {
+			return true;
+		}
 		boolean canSee = plugin.getSettings().isSeeAll(player.getName());
 		boolean isHidden = commonPlayers.contains(name);
-		return (canSee||!isHidden);
+		return (canSee || !isHidden);
 	}
 
 	public void invisible(Player p1, Player p2, boolean force) {
